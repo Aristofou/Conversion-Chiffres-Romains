@@ -1,0 +1,167 @@
+PROGRAMME ChiffresRomains
+
+CONST				//Declaration des constantes
+	VALMIN<-1		//On place une valeur minimale afin d'être sur que l'utilisateur soit dans la bonne tranche
+	VALMAX<-3999	//On pose une valeur maximale pour une eventuelle boucle de saisie
+	M<-1000
+	D<-500
+	C<-100
+	L<-50			//Assignation des valeurs de chaque lettre romaine
+	X<-10	
+	V<-5
+	I<-1
+
+
+
+
+FONCTION ConversionDecimal (VAR Nb:ENTIER, NbRomain:CHAINE)ENTIER		//Fonction de conversion de romain a decimale
+
+	VAR
+		cpt:ENTIER
+
+	DEBUT
+
+		//POUR cpt de 1 à Longueur(NbRomain) FAIRE	
+		//J'ai essayé d'utiliser une boucle POUR mais le programme limitait la conversion à 5 caractères, je ne sais toujours pas pourquoi donc je la laisse en commentaire
+		TANT QUE (NbRomain[cpt]<=Longueur(NbRomain)) FAIRE		//Alors j'ai modifié la méthode ainsi que la condition de sortie, afin de répondre à la demande
+			SI NbRomain[cpt]='C' ET NbRomain[cpt+1]='M' ALORS
+				Nb<-Nb + (M - C)										//On test toutes les possibilités soustractives
+				cpt<-cpt+2												// Si une soustraction est possible, on saute directement les deux caractères, car ils vont ensemble
+			SINON SI NbRomain[cpt]='C' ET NbRomain[cpt+1]='D' ALORS    
+				Nb <-Nb + (D - C)
+				cpt<-cpt+2
+			SINON SI NbRomain[cpt]='X' ET NbRomain[cpt+1]='L' ALORS
+				Nb <-Nb + (L - C)
+				cpt<-cpt+2
+			SINON SI NbRomain[cpt]='I' ET NbRomain[cpt+1]='X' ALORS
+				Nb <-Nb + (X - I)
+				cpt<-cpt+2
+			SINON SI NbRomain[cpt]='I' ET NbRomain[cpt+1]='V' ALORS
+				Nb <-Nb + (V - I)
+				cpt<-cpt+2
+			SINON 
+				SI NbRomain[cpt]='M' ALORS					//Si aucune soustraction n'est possible, on reaffecte à la variable sa valeur, plus la valeur de la lettre en question
+					Nb <- Nb + M
+					cpt<-cpt+1
+				SI NbRomain[cpt]='D' ALORS
+					Nb <- Nb + D
+					cpt<-cpt+1
+				SI NbRomain[cpt]='C' ALORS
+					Nb <- Nb + C
+					cpt<-cpt+1
+				SI NbRomain[cpt]='L' ALORS
+					Nb <- Nb + L
+					cpt<-cpt+1
+				SI NbRomain[cpt]='X' ALORS
+					Nb <- Nb + X
+					cpt<-cpt+1
+				SI NbRomain[cpt]='V' ALORS
+					Nb <- Nb + V
+					cpt<-cpt+1
+				SI NbRomain[cpt]='I' ALORS
+					Nb <- Nb + I
+					cpt<-cpt+1
+				FINSI
+			FINSI
+		FIN TANT QUE 				//On sort à la fin de la chaine de caractères
+		//FINPOUR
+	ConversionDecimal <- NbRomain		//On affecte dans la fonction la valeur décimale du nombre romain
+FINFONCTION
+
+FONCTION ConversionRomain (VAR Nb:ENTIER, NbRomain:CHAINE)CHAINE  		//Fonction Decimale Vers Romain
+
+DEBUT
+	TANT QUE Nb>0 FAIRE	//Tant que le chiffre est supérieur à 0, il reste quelque chose a convertir
+		SI Nb > 1000 ALORS	//On fait les tests en descendant de plus en plus afin d'être précis sur la conversion
+			NbRomain<-NbRomain & "M"
+			Nb <- Nb - 1000
+		SINON
+			SI Nb > 900 ALORS
+				NbRomain<-NbRomain & "CM"		//On test aussi les soustractions
+				Nb<-Nb - 900
+			SINON
+				SI Nb > 500 ALORS
+					NbRomain<-NbRomain & "D"
+					Nb <- Nb - 500
+				SINON
+					SI Nb > 400 ALORS
+						NbRomain <- NbRomain & "CD"
+						Nb <- Nb - 400
+					SINON
+						SI Nb > 100 ALORS
+							NbRomain <- NbRomain & "C"
+							Nb <- Nb - 100
+						SINON
+							SI Nb > 90 ALORS
+								NbRomain <- NbRomain & "XC"
+								Nb <- Nb - 90
+							SINON
+								SI Nb > 50 ALORS
+									NbRomain <- NbRomain & "L"
+									Nb <- Nb - 50
+								SINON
+									SI Nb > 40 ALORS
+										NbRomain <- NbRomain & "XL"
+										Nb <- Nb - 40
+									SINON
+										SI Nb > 10	ALORS
+											NbRomain <- NbRomain & "X"
+											Nb <- Nb - 10
+										SINON
+											SI Nb > 9	ALORS
+												NbRomain <- NbRomain & "IX"
+												Nb <- Nb - 9 
+											SINON
+												SI Nb > 5	ALORS
+													NbRomain <- NbRomain & "V"
+													Nb <- Nb - 5
+												SINON
+														SI Nb > 4 ALORS
+															NbRomain <- NbRomain & "IV"
+															Nb <- Nb - 4
+														SINON
+															NbRomain <- NbRomain & "I"
+															Nb <- Nb - 1
+														FINSI
+												FINSI
+										FINSI
+								FINSI
+						FINSI
+				FINSI
+		FINSI
+	FINTANTQUE
+	
+	ConversionRomain <- NbRomain
+
+FINFONCTION
+
+VAR 		//Declaration de deux variables locales, Nb pour le nombre décimal, NbRomain pour le nombre romain
+	Nb, Choix:ENTIER
+	NbRomain:CHAINE
+
+DEBUT		//Debut du programme principale
+
+	NbRomain <- ''		//Initialisation des variables
+	Nb <- 0
+
+
+	ECRIRE("Rentrez 1 pour convertir un chiffre romain en chiffre décimal, 2 pour convertir un chiffre décimal en chiffre romain")
+	LIRE Choix
+
+	CAS Choix PARMI 
+	CAS 1 : 
+		ECRIRE ("Veuillez rentrer un chiffre romain")
+		LIRE NbRomain
+		ECRIRE("Le chiffre romain ",NbRomain," vaut en decimale : ",ConversionDecimal(NbRomain,Nb))
+	CAS 2 :
+		ECRIRE ("Veuillez rentrer un chiffre décimal")
+		LIRE Nb
+		ECRIRE("Le chiffre décimal ",Nb," vaut en romain : ",ConversionRomain(NbRomain,Nb))
+	FINCASPARMI
+FIN
+
+
+
+			
+
+
